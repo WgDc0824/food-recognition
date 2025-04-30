@@ -187,9 +187,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Contact
 For questions, please contact:
 - Project Issues
-- Email: [contact-email]
-- Forum: [forum-url]
-
+- Email: [c08241014@163.com]
+  
 ## Changelog
 ### v1.0.0 (2022-01-01)
 - Initial release
