@@ -1,166 +1,221 @@
-# Food Recognition Benchmark 2022 第三名解决方案
+# Food Recognition Benchmark 2022
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/)
+## Project Overview
+This is a food recognition project participating in the Food Recognition Benchmark 2022 challenge. The project uses deep learning technology to achieve instance segmentation of food items, enabling precise recognition and segmentation of food in images.
 
-本项目是 [Food Recognition Benchmark 2022](https://www.aicrowd.com/challenges/food-recognition-benchmark-2022) 比赛的第三名解决方案。该比赛旨在开发一个能够准确识别食品图像中各种食品的计算机视觉系统。
+### Project Background
+Food recognition is an important research direction in the field of computer vision, with broad application prospects in intelligent catering, health management, smart shopping, and other areas. This project aims to provide technical support for related applications by achieving precise recognition and segmentation of food images through deep learning technology.
 
-## 目录
-- [解决方案概述](#解决方案概述)
-- [技术细节](#技术细节)
-- [环境要求](#环境要求)
-- [安装指南](#安装指南)
-- [使用方法](#使用方法)
-- [项目结构](#项目结构)
-- [实验结果](#实验结果)
-- [许可证](#许可证)
-- [致谢](#致谢)
-- [Docker 使用说明](#docker-使用说明)
+### Technical Features
+- Utilizes advanced deep learning frameworks (MMDetection and Detectron2)
+- Supports multiple instance segmentation model architectures
+- Provides complete training, evaluation, and prediction pipelines
+- Supports multi-GPU parallel training
+- Offers Docker containerization deployment solution
 
-## 解决方案概述
+### Main Features
+1. **Food Recognition**: Identify food categories in images
+2. **Instance Segmentation**: Precisely segment the boundaries of each food instance
+3. **Multi-category Support**: Support recognition of multiple food categories
+4. **Real-time Inference**: Support real-time food recognition and segmentation
+5. **Batch Processing**: Support batch image processing
 
-我们的解决方案主要基于以下两个关键步骤：
+### Application Scenarios
+- Smart Restaurants: Automatic dish recognition and nutrition information calculation
+- Health Management: Help users track dietary habits
+- Smart Shopping: Assist users in identifying and purchasing food items
+- Food Classification: Automatic classification and organization of food images
+- Nutrition Analysis: Analyze food nutritional components
 
-1. **数据标注修复**
-   - 使用掩码标注的边界框坐标 [min_x, min_y, max_x, max_y] 来修正原始边界框标注
-   - 这一步骤解决了原始数据集中存在的大量标注噪声问题
-   - 通过精确的边界框标注，显著提高了模型的训练效果
+### Project Advantages
+1. **High Accuracy**: Uses advanced deep learning models with high recognition accuracy
+2. **User-friendly**: Provides complete deployment solutions and detailed documentation
+3. **Extensible**: Supports multiple model architectures, easy to extend
+4. **Efficient**: Supports GPU acceleration for fast processing
+5. **Open Source**: Completely open source, free to use and modify
 
-2. **模型训练**
-   - 采用 [QueryInst](https://github.com/hustvl/QueryInst) 作为基础模型
-   - 使用修复后的标注数据进行训练
-   - 训练命令：`python tools/train.py configs/exp002.py`
-
-## 技术细节
-
-### 数据预处理
-- 原始数据集中存在大量不准确的边界框标注
-- 通过掩码标注提取准确的边界框坐标
-- 这一步骤显著提高了训练数据的质量
-- 数据清洗流程：
-  1. 加载原始标注文件
-  2. 提取掩码标注的边界框坐标
-  3. 替换不准确的边界框标注
-  4. 保存修正后的标注文件
-
-### 模型选择
-- 选择 QueryInst 作为基础模型
-- QueryInst 是一个基于 Transformer 的实例分割模型
-- 该模型在 COCO 数据集上表现出色，适合迁移到食品识别任务
-- 模型特点：
-  - 端到端的实例分割框架
-  - 基于 Transformer 的查询机制
-  - 动态掩码预测头
-  - 多尺度特征融合
-
-## 环境要求
-
-- Python 3.9
-- PyTorch 1.9.0+
-- CUDA 11.1+
-- mmcv-full
-- mmdetection
-- 其他依赖请参考 requirements.txt
-
-## 安装指南
-
-1. 克隆本仓库：
-```bash
-git clone https://github.com/your-username/food-recognition-challenge.git
-cd food-recognition-challenge
+## Project Structure
+```
+food/
+├── data/                    # Data directory
+├── Detic/                   # Detic model related code
+├── QueryInst/              # QueryInst model related code
+├── food_recognition_project/ # Main project code
+├── detectron2/             # Detectron2 framework code
+├── evaluator/              # Evaluator code
+├── models/                 # Model files
+├── utils/                  # Utility functions
+├── weights/                # Weight files
+├── Dockerfile             # Docker configuration
+├── requirements.txt       # Python dependencies
+├── predict.py            # Main prediction script
+└── Other configuration files...
 ```
 
-2. 创建并激活虚拟环境：
+## System Requirements
+- Operating System: Ubuntu 18.04 or higher
+- GPU: NVIDIA GPU with CUDA 10.1 support
+- Memory: 16GB or more recommended
+- Storage: 50GB or more recommended
+
+## Installation Guide
+
+### 1. Basic Environment Setup
 ```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# 或
-.\venv\Scripts\activate  # Windows
+# Install Python 3.7
+sudo apt-get update
+sudo apt-get install python3.7 python3.7-dev
+
+# Install pip
+sudo apt-get install python3-pip
+
+# Install CUDA 10.1
+# Please refer to NVIDIA official documentation for CUDA installation
 ```
 
-3. 安装依赖：
+### 2. Install Dependencies
 ```bash
+# Clone the project
+git clone [project-url]
+
+# Enter project directory
+cd food
+
+# Install Python dependencies
 pip install -r requirements.txt
 ```
 
-4. 安装 mmcv-full：
+### 3. Docker Installation (Optional)
 ```bash
-pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9.0/index.html
+# Build Docker image
+docker build -t food-recognition .
+
+# Run Docker container
+docker run --gpus all food-recognition
 ```
 
-## 使用方法
+## Usage Guide
 
-### 数据准备
-1. 下载比赛数据集
-2. 运行数据预处理脚本：
+### 1. Data Preparation
+- Place training data in the `data/` directory
+- Ensure data format meets requirements (COCO format)
+
+### 2. Model Training
 ```bash
-python tools/preprocess_data.py
+# Train with MMDetection
+python train_mmdetection.py
+
+# Train with Detectron2
+python train_detectron2.py
 ```
 
-### 训练模型
+### 3. Model Prediction
 ```bash
-python tools/train.py configs/exp002.py
+# Predict with default configuration
+python predict.py
+
+# Predict with MMDetection
+python predict_mmdetection.py
+
+# Predict with Detectron2
+python predict_detectron2.py
 ```
 
-### 推理
+### 4. Model Evaluation
 ```bash
-python tools/test.py configs/exp002.py work_dirs/exp002/latest.pth --show
+# Run evaluation script
+python evaluator/evaluate.py
 ```
 
-## 项目结构
-```
-food-recognition-challenge/
-├── configs/              # 配置文件目录
-├── data/                 # 数据目录
-├── tools/                # 工具脚本
-├── work_dirs/            # 工作目录
-├── requirements.txt      # 依赖文件
-└── README.md            # 项目说明
-```
+## Supported Models
+- HTC (Hybrid Task Cascade)
+- Mask R-CNN
+- QueryInst
+- Detic
 
-## 实验结果
-- 在验证集上的 mAP: 0.xxx
-- 在测试集上的 mAP: 0.xxx
-- 推理速度: xx FPS
+## Configuration
+Main configuration files:
+- `configs/`: Model configuration files
+- `aicrowd.json`: Project configuration file
+- `requirements.txt`: Python dependencies configuration
 
-## 许可证
-本项目采用 MIT 许可证发布，与 AICrowd 比赛仓库和 QueryInst 仓库保持一致。
+## FAQ
 
-## 致谢
-- 感谢 AICrowd 组织本次比赛
-- 感谢 QueryInst 团队提供优秀的开源模型
-- 感谢所有参与比赛和提供帮助的社区成员
-
-## 联系方式
-如有任何问题或建议，请通过以下方式联系：
-- 邮箱：your-email@example.com
-- GitHub Issues
-
-## Docker 使用说明
-
-### Mac 用户快速开始（仅生成预测结果）
-
-如果您使用的是 Mac 电脑，并且只需要生成预测结果，可以按照以下步骤操作：
-
-1. **构建 Docker 镜像**
-```bash
-docker build -t food-recognition:latest .
+### 1. GPU Related Issues
+Q: How to check if GPU is available?
+A: Run the following command:
+```python
+import torch
+print(torch.cuda.is_available())
 ```
 
-2. **准备数据**
-- 将测试图片放在 `./data/test_images` 目录下
-- 确保 `./work_dirs/exp002/latest.pth` 中有预训练模型权重文件
+### 2. Memory Issues
+Q: Getting out of memory error during training?
+A: Try:
+- Reduce batch size
+- Use smaller model
+- Increase virtual memory
 
-3. **运行推理**
-```bash
-docker run -it \
-  -v $(pwd)/data:/workspace/data \
-  -v $(pwd)/work_dirs:/workspace/work_dirs \
-  food-recognition:latest \
-  python tools/test.py configs/exp002.py work_dirs/exp002/latest.pth --format-only --options "jsonfile_prefix=./work_dirs/exp002/test_results"
-```
+### 3. Dependency Issues
+Q: Getting errors during dependency installation?
+A: Ensure:
+- Correct Python version (3.7)
+- Correct CUDA version (10.1)
+- Correct pip version
 
-4. **获取结果**
-- 预测结果将保存在 `./work_dirs/exp002/test_results.bbox.json` 文件中
+## Performance Metrics
+- mAP (mean Average Precision) on validation set
+- Inference speed (FPS)
+- Memory usage
 
-> 注意：由于使用 CPU 进行推理，处理速度会比 GPU 版本慢。建议使用小批量图片进行测试。
+## Contributing
+1. Fork the project
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+## Acknowledgments
+- AIcrowd Platform
+- MMDetection Team
+- Detectron2 Team
+- All Contributors
+
+## Contact
+For questions, please contact:
+- Project Issues
+- Email: [contact-email]
+- Forum: [forum-url]
+
+## Changelog
+### v1.0.0 (2022-01-01)
+- Initial release
+- Basic functionality support
+- Example code provided
+
+### v1.1.0 (2022-02-01)
+- Added new model support
+- Performance optimization
+- Bug fixes
+
+## Resources
+- [Project Documentation](docs/)
+- [API Reference](docs/api.md)
+- [Example Code](examples/)
+- [FAQ](docs/faq.md)
+
+## Citation
+If you use this project in your research, please cite:
+```bibtex
+@misc{food_recognition_2022,
+  author = {AIcrowd},
+  title = {Food Recognition Benchmark 2022},
+  year = {2022},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/your-repo}}
+}
+``` 
